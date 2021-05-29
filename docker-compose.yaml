@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  node:
+    container_name: 'codemondaybe'
+    build: .
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_HOST=postgresqls
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=codemonday29052021
+      - DB_NAME=codemonday
+    volumes:
+      - ./:/home/node/app
+    depends_on:
+      - postgresqls
+    ports:
+      - '3000:3000'
+    networks:
+      - default
+    command: 'npm start'
+  postgresqls:
+    image: 'postgis/postgis'
+    ports:
+      - '5433:5432'
+    volumes:
+      - db_persdata:/var/lib/postgrespers
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: codemonday29052021
+      POSTGRES_DB: codemonday
+    networks:
+      - default
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mail.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+networks:
+  default:
+volumes:
+  db_persdata: {}
